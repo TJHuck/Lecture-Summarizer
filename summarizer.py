@@ -8,7 +8,7 @@ from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TimeEl
 
 console = Console()
 
-def process_lecture(audio_path, output_pdf = None, ollama_model = "llama3.2:1b"):
+def process_lecture(audio_path, output_pdf = None, ollama_model = "llama3.2:3b"):
     if(os.path.exists(audio_path) == False):
         console.print(f"[bold red]Error:[/bold red] File not found at '{audio_path}'")
         return
@@ -41,8 +41,8 @@ def process_lecture(audio_path, output_pdf = None, ollama_model = "llama3.2:1b")
             task2 = progress.add_task("[cyan]Generating summary (Ollama)...", total = 100)
 
             prompt = (
-                "You are an elite academic assistant. Summarize the following lecture transcript. "
-                "Provide a title, an overall concise overview, and a bulleted list of core concepts with their definitions:\n\n"
+                "You are an elite academic assistant. Summarize the following lecture transcript, take as much time as you need, and give as much detail as possible. "
+                "Provide a title, an overall overview, and a bulleted list of core concepts with their definitions. Give as much detail as possible:\n\n"
                 f"{full_text}"  
             )
             summary_response = ollama.generate(model=ollama_model, prompt=prompt)
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Completely offline lecture transcript audio summarizer.")
     parser.add_argument("audio", type=str, nargs="?", help="Path to your target audio file (.mp3, .wav, etc.)")
     parser.add_argument("-o", "--output", type=str, default=None, help="Optional custom name/path for output PDF")
-    parser.add_argument("--model", type=str, default="llama3.2:1b", help="Installed Ollama model to use for summarization")
+    parser.add_argument("--model", type=str, default="llama3.2:3b", help="Installed Ollama model to use for summarization")
     
     args = parser.parse_args()
     audio_path = args.audio or input("Path to your audio file: ").strip()
